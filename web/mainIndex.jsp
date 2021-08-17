@@ -20,6 +20,10 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <!-- Google sign-in -->
+    <meta name="google-signin-client_id" content="140271236674-p3j7pdfs2k2mn2vjmgvdg3jbjcddj33l.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+
     <link rel="stylesheet" href="css/style.css">
     <style>
         input[type=text], select {
@@ -37,23 +41,12 @@
 
 </head>
 
-<body style="background-image: url(images/cocktails.jpg);">
-
-<%
-    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-    response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-    response.setHeader("Expires", "0"); // Proxies.
-
-    if(session.getAttribute("Username")==null)
-    {
-        response.sendRedirect("login.jsp");
-    }
-
-%>
+<body style="background-image: url(images/cocktails.jpg);" onload="onLoad()">
 
 <div class="header">
-    <a class="navbar-brand scroll-top" style="text-align: left; font-size: 20px;"><b>WELCOME "${Username}"! </b></a>
-    <a href="<%=request.getContextPath()%>/LogoutServlet" class="navbar-brand scroll-top" style="float: right; border: 2px solid darkred;">LOG OUT</a>
+    <a class="navbar-brand scroll-top" style="text-align: left; font-size: 20px;"><b>WELCOME! </b></a>
+    <a id="log" href="<%=request.getContextPath()%>/LogoutServlet" class="navbar-brand scroll-top" style="visibility: hidden; float: right; border: 2px solid darkred;">LOG OUT</a>
+    <a id="google_log" href="#" onclick="signOut()" class="navbar-brand scroll-top" style="visibility: hidden; float: right; border: 2px solid darkred;">LOG OUT</a>
     <div class="container">
         <a href="#" class="navbar-brand scroll-top" style="text-align:center; font-size: 40px; display:block;">Cocktail Picker</a>
     </div>
@@ -155,5 +148,25 @@
     </div>
 </section>
 
+<script>
+    function onLoad() {
+        gapi.load('auth2', function() {
+            gapi.auth2.init();
+        });
+        if(auth2.isSignedIn.get()) {
+            document.getElementById("google_log").style.visibility = 'visible';
+        } else {
+            document.getElementById("log").style.visibility = 'visible';
+        }
+    }
+
+    function signOut() {
+        gapi.auth2.getAuthInstance().disconnect().then( function() {
+            console.log('user signed out')
+            window.location="login.jsp";
+        })
+    }
+
+</script>
 </body>
 </html>

@@ -51,8 +51,15 @@
               <input type="date" id="datein" class="form-control" placeholder="Birthday" name="Birthday" required
                      value="date" min="1910-01-01" max="2050-12-31">
             </div>
+            <div class="form-group"> </div>
             <div class="form-group">
               <button type="submit" class="form-control btn btn-primary submit px-3">Register</button>
+            </div>
+            <div class="form-group d-md-flex">
+              <div class="w-50">
+              </div>
+              <div class="w-50 text-md-right">
+              </div>
             </div>
           </form>
 

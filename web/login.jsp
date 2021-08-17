@@ -19,6 +19,11 @@
 
   <link rel="stylesheet" href="css/style.css">
 
+  <!-- Google sign-in -->
+  <meta name="google-signin-scope" content="profile email">
+  <meta name="google-signin-client_id" content="140271236674-p3j7pdfs2k2mn2vjmgvdg3jbjcddj33l.apps.googleusercontent.com">
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+
 </head>
 <body class="img js-fullheight" style="background-image: url(images/cocktails.jpg);">
 <section class="ftco-section">
@@ -34,7 +39,7 @@
           <h3 class="mb-4 text-center">Have an account?</h3>
           <form action="${pageContext.request.contextPath}/LoginServlet" method="post" class="signin-form">
             <div class="form-group">
-              <input class="form-control" type="text" name="Email" placeholder="Email"  required>
+              <input class="form-control" type="text" name="Email" placeholder="Email" required>
             </div>
             <div class="form-group">
               <input id="password-field" type="password" name="Password" class="form-control" placeholder="Password"  required>
@@ -50,10 +55,16 @@
               </div>
             </div>
           </form>
+
           <p class="w-100 text-center">&mdash; Or Register here &mdash;</p>
           <div class="social d-flex text-center">
             <a href="register.jsp" class="px-2 py-2 mr-md-1 rounded"><span class="ion-logo-facebook mr-2"></span> Register</a>
           </div>
+
+          <div class="social d-flex text-center"> <br> </div>
+
+          <p class="w-100 text-center">&mdash; Sign in with Google &mdash;</p>
+          <div class="g-signin2" data-width="350" data-height="50" data-longtitle="true" data-onsuccess="onSuccess"> </div>
         </div>
       </div>
     </div>
@@ -64,6 +75,30 @@
 <script src="js/popper.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
+
+<script>
+  function onSignIn(googleUser) {
+    // Useful data for your client-side scripts:
+    var profile = googleUser.getBasicProfile();
+    console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+    console.log('Full Name: ' + profile.getName());
+    console.log("Email: " + profile.getEmail());
+
+    // The ID token you need to pass to your backend:
+    var id_token = googleUser.getAuthResponse().id_token;
+    console.log("ID Token: " + id_token);
+
+    var myUserEntity = {};
+    myUserEntity.Name = profile.getName();
+
+    sessionStorage.setItem('myUserEntity',JSON.stringify(myUserEntity));
+  }
+
+  function onSuccess(googleUser) {
+    console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+    window.location="mainIndex.jsp";
+  }
+</script>
 
 </body>
 </html>
