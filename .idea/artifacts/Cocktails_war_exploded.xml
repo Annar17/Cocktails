@@ -8,7 +8,7 @@
           <element id="module-output" name="Cocktails" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="postgresql-42.2.20" />
+          <element id="library" level="project" name="postgresql-42.2.23" />
         </element>
       </element>
     </root>

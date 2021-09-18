@@ -1,5 +1,5 @@
 <%@ page import="mainpackage.datapackage.Cocktails" %>
-<%--
+<%@ page import="java.util.ArrayList" %><%--
   Created by IntelliJ IDEA.
   User: Anouk
   Date: 2/6/2021
@@ -24,19 +24,6 @@
     <meta name="google-signin-client_id" content="140271236674-p3j7pdfs2k2mn2vjmgvdg3jbjcddj33l.apps.googleusercontent.com">
 
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        input[type=text], select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            margin-top: 6px;
-            margin-bottom: 16px;
-            resize: vertical;
-            text-align-last: center;
-        }
-    </style>
 
 </head>
 
@@ -70,38 +57,45 @@
 
 </script>
 
-<%Cocktails cocktail = (Cocktails) request.getAttribute("cocktail");%>
-
 <!--header-->
 <div class="header">
     <a id="back" href="javascript:history.back()" class="navbar-brand scroll-top" style="float: left; border: 2px solid darkred;">BACK</a>
     <a id="log" href="<%=request.getContextPath()%>/LogoutServlet" class="navbar-brand scroll-top" style="visibility: hidden; float: right; border: 2px solid darkred;">LOG OUT</a>
     <a id="google_log" href="#" onclick="signOut()" class="navbar-brand scroll-top" style="visibility: hidden; float: right; border: 2px solid darkred;">LOG OUT</a>
     <div class="container">
-        <h2 style="text-align:center; font-size: 40px; color: white; display:block;"><%=cocktail.getName()%></h2>
+        <h2 style="text-align:center; font-size: 40px; color: navajowhite; display:block;">Cocktails with base: <%=request.getParameter("Base")%></h2>
     </div>
 </div>
 
-<!--Print cocktail-->
-<section id="print_c">
+<% ArrayList<Cocktails> cocktailsList = (ArrayList<Cocktails>)request.getAttribute("cocktailsList"); %>
+
+<section class="featured-food">
     <div class="container" style="border: 2px solid navajowhite;">
         <div class="row">
             <div class="col-md-12">
                 <div class="heading">
-                    <h5 style="text-align:center; color:white; display:block;"><%=cocktail.getBase()%>, <%=cocktail.getTaste()%></h5>
+
                 </div>
-                <h4 style="text-align:center; color:white;">&mdash; Make it at home: &mdash;</h4>
-                <iframe src=<%=cocktail.getLink()%> height="600px" width="1100px" target="_blank"></iframe>
             </div>
         </div>
-    </div>
 
-    <div><h4 style="text-align: center; color: white;">&mdash; Or find a bar near you: &mdash;</h4></div>
-    <br>
-    <a href="Maps.jsp" style="display: flex; align-items: center; justify-content: center;">
-        <button style="position: absolute; align-self: center; text-align: center;">CLICK HERE</button>
-    </a>
-    <br>
+        <div class="row">
+            <% for (Cocktails c : cocktailsList) { %>
+            <%-- Dynamic creation of squares --%>
+            <div class="col-md-4">
+                <div class="food-item">
+                    <a id="Name" href="<%=request.getContextPath()%>/CocktailServlet2?Name=<%=c.getName()%>" method="get" style="font-size: 20px; color: white;"><%=c.getName()%></a>
+                    <img src="img/breakfast_item.jpg" alt="">
+                    <div id="Taste"><%=c.getTaste()%></div>
+                    <div class="text-content">
+                        <h4></h4>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
 </section>
 
 <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>

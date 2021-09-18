@@ -91,12 +91,21 @@
     var myUserEntity = {};
     myUserEntity.Name = profile.getName();
 
+    //Store the entity object in sessionStorage where it will be accessible from all pages of your site.
     sessionStorage.setItem('myUserEntity',JSON.stringify(myUserEntity));
   }
 
   function onSuccess(googleUser) {
     console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
     window.location="mainIndex.jsp";
+
+    var profile = googleUser.getBasicProfile();
+
+    var myUserEntity = {};
+    myUserEntity.Name = profile.getName();
+
+    //Store the entity object in sessionStorage where it will be accessible from all pages of your site.
+    sessionStorage.setItem('myUserEntity',JSON.stringify(myUserEntity));
   }
 </script>
 

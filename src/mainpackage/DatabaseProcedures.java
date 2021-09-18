@@ -5,11 +5,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import mainpackage.userspackage.Users;
+import mainpackage.datapackage.Cocktails;
+import mainpackage.datapackage.Users;
 
 public class DatabaseProcedures { // DAO
 
@@ -18,7 +18,8 @@ public class DatabaseProcedures { // DAO
 	private final String password = "anna123";
 	private final String dbDriver = "org.postgresql.Driver";
 
-	public DatabaseProcedures() {	}
+	public DatabaseProcedures() {
+	}
 
 	public void loadDriver(String dbDriver) {
 		try {
@@ -46,7 +47,7 @@ public class DatabaseProcedures { // DAO
 		String query = "INSERT INTO users(username, email, password, dateofbirth, category) VALUES (?, ?, ?, ?, ?);";
 
 		try {
-			PreparedStatement ps= connection.prepareStatement(query);
+			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setString(1, ((Users) user).getUsername());
 			ps.setString(2, ((Users) user).getEmail());
 			ps.setString(3, ((Users) user).getPassword());
@@ -75,16 +76,14 @@ public class DatabaseProcedures { // DAO
 			ps.setString(1, email);
 			ResultSet resultSet = ps.executeQuery();
 
-			if ( resultSet.next() ) {
+			if (resultSet.next()) {
 				String pass = resultSet.getString("password");
-				if(pass.equals(password)) {
+				if (pass.equals(password)) {
 					result = true;
-				}
-				else {
+				} else {
 					result = false;
 				}
-		    }
-			else {
+			} else {
 				result = false;
 			}
 
@@ -108,10 +107,9 @@ public class DatabaseProcedures { // DAO
 			ps.setString(1, email);
 			ResultSet resultSet = ps.executeQuery();
 
-			if ( resultSet.next() ) {
+			if (resultSet.next()) {
 				result = resultSet.getString("username");
-		    }
-			else {
+			} else {
 				result = "Failed";
 			}
 
@@ -135,10 +133,9 @@ public class DatabaseProcedures { // DAO
 			ps.setString(1, email);
 			ResultSet resultSet = ps.executeQuery();
 
-			if ( resultSet.next() ) {
+			if (resultSet.next()) {
 				result = resultSet.getString("category");
-			}
-			else {
+			} else {
 				result = "Failed";
 			}
 
@@ -148,5 +145,110 @@ public class DatabaseProcedures { // DAO
 			e.printStackTrace();
 		}
 		return result;
+	}
+
+	public Cocktails getCocktail(String base, String taste, String ingredients) {
+
+		String name = "", link = "";
+		this.loadDriver(dbDriver);
+		Connection connection = this.getConnection();
+		PreparedStatement ps;
+		ResultSet resultSet;
+		Cocktails cocktail = new Cocktails(base, taste, ingredients);
+
+		try {
+			String query1 = "SELECT name, link FROM recipes WHERE base = ? AND taste = ?;";
+
+			ps = connection.prepareStatement(query1);  //Get name and link from database/table recipes.
+			ps.setString(1, base);
+			ps.setString(2, taste);
+			//ps.setString(3, ingredients);
+			resultSet = ps.executeQuery();
+
+			if (resultSet.next()) {
+				name = resultSet.getString("name");
+				cocktail.setName(name);
+				link = resultSet.getString("link");
+				cocktail.setLink(link);
+			}
+			resultSet.close();
+			ps.close();
+
+			//cocktail = Cocktails(name, base, taste, ingredients, link);
+
+			connection.close();
+			return cocktail;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public Cocktails getCocktailN(String name) {
+
+		this.loadDriver(dbDriver);
+		Connection connection = this.getConnection();
+		PreparedStatement ps;
+		ResultSet resultSet;
+		Cocktails cocktail = new Cocktails(name, "", "", "", "");
+
+		try {
+			String query1 = "SELECT base, taste, link FROM recipes WHERE name = ?;";
+
+			ps = connection.prepareStatement(query1);  //Get everything from database/table recipes for specific cocktail.
+			ps.setString(1, name);
+			resultSet = ps.executeQuery();
+
+			if (resultSet.next()) {
+				String base = resultSet.getString("base");
+				cocktail.setBase(base);
+				String taste = resultSet.getString("taste");
+				cocktail.setTaste(taste);
+				String link = resultSet.getString("link");
+				cocktail.setLink(link);
+			}
+			resultSet.close();
+			ps.close();
+
+			//cocktail = Cocktails(name, base, taste, ingredients, link);
+
+			connection.close();
+			return cocktail;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public List<Cocktails> getCocktails(String base) {
+
+		this.loadDriver(dbDriver);
+		Connection connection = this.getConnection();
+		PreparedStatement ps;
+		ResultSet resultSet;
+		String query = "SELECT * FROM recipes WHERE base = ?;";
+		List<Cocktails> cocktailsList = new ArrayList<Cocktails>();
+
+		try {
+			ps = connection.prepareStatement(query);
+			ps.setString(1, base);
+			resultSet = ps.executeQuery();
+
+			while ( resultSet.next() ) {
+				String name = resultSet.getString("name");
+				String taste = resultSet.getString("taste");
+				String link = resultSet.getString("link");
+
+				Cocktails c = new Cocktails(name, base, taste, "", link);
+				cocktailsList.add(c);
+			}
+			resultSet.close();
+			ps.close();
+			connection.close();
+			return cocktailsList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return cocktailsList;
+		}
 	}
 }

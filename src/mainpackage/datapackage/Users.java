@@ -1,4 +1,4 @@
-package mainpackage.userspackage;
+package mainpackage.datapackage;
 
 public class Users {
 

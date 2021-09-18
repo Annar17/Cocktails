@@ -22,7 +22,6 @@
 
     <!-- Google sign-in -->
     <meta name="google-signin-client_id" content="140271236674-p3j7pdfs2k2mn2vjmgvdg3jbjcddj33l.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
 
     <link rel="stylesheet" href="css/style.css">
     <style>
@@ -41,8 +40,37 @@
 
 </head>
 
-<body style="background-image: url(images/cocktails.jpg);" onload="onLoad()">
+<body style="background-image: url(images/cocktails.jpg);" onload="checkIfSigned()">
 
+<script>
+    function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+            console.log('User signed out.');
+            window.location="login.jsp";
+        });
+    }
+
+    function onLoad() {
+        gapi.load('auth2', function() {
+            gapi.auth2.init();
+        });
+    }
+
+    function checkIfSigned() {
+        if(sessionStorage.getItem('myUserEntity') == null){
+            //Redirect to login page, no user entity available in sessionStorage
+            document.getElementById("log").style.visibility = 'visible';
+        } else {
+            var userEntity = {};
+            userEntity = JSON.parse(sessionStorage.getItem('myUserEntity'));
+            document.getElementById("google_log").style.visibility = 'visible';
+        }
+    }
+
+</script>
+
+<!--header-->
 <div class="header">
     <a class="navbar-brand scroll-top" style="text-align: left; font-size: 20px;"><b>WELCOME! </b></a>
     <a id="log" href="<%=request.getContextPath()%>/LogoutServlet" class="navbar-brand scroll-top" style="visibility: hidden; float: right; border: 2px solid darkred;">LOG OUT</a>
@@ -51,7 +79,6 @@
         <a href="#" class="navbar-brand scroll-top" style="text-align:center; font-size: 40px; display:block;">Cocktail Picker</a>
     </div>
 </div>
-<!--header-->
 
 <!--Find cocktail section-->
 <section id="choose_c">
@@ -63,39 +90,39 @@
                 </div>
             </div>
                 <div class="container" style="text-align:center;">
-                    <form action="/action_page.php">
+                    <form action="${pageContext.request.contextPath}/CocktailServlet" method="get">
                        <label for="base">Base liquor:</label>
-                        <select id="base" name="base">
-                            <option value="vodka">Vodka</option>
-                            <option value="gin">Gin</option>
-                            <option value="whiskey">Whiskey</option>
-                            <option value="Rum">Rum</option>
+                        <select id="base" name="Base">
+                            <option value="Vodka" name="Vodka">Vodka</option>
+                            <option value="Gin" name="Gin">Gin</option>
+                            <option value="Whiskey" name="Whiskey">Whiskey</option>
+                            <option value="Rum" name="Rum">Rum</option>
                         </select>
 
                         <label for="taste">Taste:</label>
-                        <select id="taste" name="taste">
-                            <option value="sweet">Sweet</option>
-                            <option value="sour">Sour</option>
-                            <option value="spicy">Spicy</option>
-                            <option value="sweet&sour">Sweet & Sour</option>
-                            <option value="sweet&spicy">Sweet & Spicy</option>
+                        <select id="taste" name="Taste">
+                            <option value="Sweet" name="Sweet">Sweet</option>
+                            <option value="Sour" name="Sour">Sour</option>
+                            <option value="Spicy" name="Spicy">Spicy</option>
+                            <option value="Sweet&Sour" name="Sweet&Sour">Sweet & Sour</option>
+                            <option value="Sweet&Spicy" name="Sweet&Spicy">Sweet & Spicy</option>
                         </select>
 
                         <label>Possible Allergies:</label>
                         <div>
-                            <input type="checkbox" id="nuts" name="nuts">
-                            <label for="nuts">Nuts</label>
+                            <input type="checkbox" id="nuts" name="Nuts">
+                            <label for="nuts" name="Nuts">Nuts</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="egg_white" name="egg_white">
-                            <label for="egg_white">Egg White</label>
+                            <input type="checkbox" id="egg_white" name="Egg_White">
+                            <label for="egg_white" name="Egg_White">Egg White</label>
                         </div>
-                    </form>
                     <br>
                     <div>
                         <input type="submit" value="SUBMIT" style="background-color: mediumseagreen; width: 50%;">
                     </div>
                     <br>
+                    </form>
                 </div>
         </div>
     </div>
@@ -114,7 +141,7 @@
             </div>
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="service-item">
-                    <a href="menu.html">
+                    <a id="Vodka" value="Vodka" href="${pageContext.request.contextPath}/DrinkServlet?Base=Vodka" method="get">
                         <img src="images/vodka.png" alt="Vodka">
                         <h4 style="color: navajowhite;">Vodka</h4>
                     </a>
@@ -122,7 +149,7 @@
             </div>
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="service-item">
-                    <a href="menu.html">
+                    <a id="Gin" value="Gin" href="${pageContext.request.contextPath}/DrinkServlet?Base=Gin" method="get">
                         <img src="images/gin.png" alt="Gin">
                         <h4 style="color: navajowhite;">Gin</h4>
                     </a>
@@ -130,7 +157,7 @@
             </div>
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="service-item">
-                    <a href="menu.html">
+                    <a id="Whiskey" value="Whiskey" href="${pageContext.request.contextPath}/DrinkServlet?Base=Whiskey" method="get">
                         <img src="images/whiskey.png" alt="Whiskey">
                         <h4 style="color: navajowhite;">Whiskey</h4>
                     </a>
@@ -138,7 +165,7 @@
             </div>
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="service-item">
-                    <a href="menu.html">
+                    <a id="Rum" value="Rum" href="${pageContext.request.contextPath}/DrinkServlet?Base=Rum" method="get">
                         <img src="images/rum.png" alt="Rum">
                         <h4 style="color: navajowhite;">Rum</h4>
                     </a>
@@ -148,25 +175,8 @@
     </div>
 </section>
 
-<script>
-    function onLoad() {
-        gapi.load('auth2', function() {
-            gapi.auth2.init();
-        });
-        if(auth2.isSignedIn.get()) {
-            document.getElementById("google_log").style.visibility = 'visible';
-        } else {
-            document.getElementById("log").style.visibility = 'visible';
-        }
-    }
+<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
 
-    function signOut() {
-        gapi.auth2.getAuthInstance().disconnect().then( function() {
-            console.log('user signed out')
-            window.location="login.jsp";
-        })
-    }
-
-</script>
 </body>
+
 </html>
