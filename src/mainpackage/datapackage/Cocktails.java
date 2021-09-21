@@ -1,8 +1,9 @@
 package mainpackage.datapackage;
 
-public class Cocktails {
+public class Cocktails implements Comparable<Cocktails> {
 
     private String name, base, taste, ingredients, link;
+    private String image;
 
     public Cocktails(String base, String taste, String ingredients) {
         this.base = base;
@@ -10,12 +11,13 @@ public class Cocktails {
         this.ingredients = ingredients;
     }
 
-    public Cocktails(String name, String base, String taste, String ingredients, String link) {  //constructor
+    public Cocktails(String name, String base, String taste, String ingredients, String link, String image) {  //constructor
         this.name = name;
         this.base = base;
         this.taste = taste;
         this.ingredients = ingredients;
         this.link = link;
+        this.image = image;
     }
 
     public Cocktails(String base) {
@@ -60,5 +62,18 @@ public class Cocktails {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    @Override
+    public int compareTo(Cocktails o) {
+        return this.name.compareTo(o.name);
     }
 }

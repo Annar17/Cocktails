@@ -8349,7 +8349,7 @@ textarea.form-control {
 
 .bg {
   /* The image used */
-  background-image: url("cocktails.jpg");
+  background-image: url("/images/cocktails.jpg");
 
   /* Full height */
   height: 100%;

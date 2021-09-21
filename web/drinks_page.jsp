@@ -85,10 +85,13 @@
             <div class="col-md-4">
                 <div class="food-item">
                     <a id="Name" href="<%=request.getContextPath()%>/CocktailServlet2?Name=<%=c.getName()%>" method="get" style="font-size: 20px; color: white;"><%=c.getName()%></a>
-                    <img src="img/breakfast_item.jpg" alt="">
                     <div id="Taste"><%=c.getTaste()%></div>
+                    <a href="<%=request.getContextPath()%>/CocktailServlet2?Name=<%=c.getName()%>" method="get" style="font-size: 20px; color: white;">
+                        <img src="data:image/png;base64, <%=c.getImage()%>" alt="" width="300" height="250">
+                    </a>
                     <div class="text-content">
                         <h4></h4>
+                        <br>
                         <p></p>
                     </div>
                 </div>

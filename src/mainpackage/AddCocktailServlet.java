@@ -1,26 +1,29 @@
 package mainpackage;
 
 import mainpackage.datapackage.Cocktails;
+import org.apache.commons.io.IOUtils;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import java.io.IOException;
-import java.util.List;
+import java.io.InputStream;
 
 /**
  * Servlet implementation class mainpackage.CocktailServlet
  */
-@WebServlet("/CocktailServlet")
-public class CocktailServlet extends HttpServlet {
+@MultipartConfig
+@WebServlet("/AddCocktailServlet")
+public class AddCocktailServlet extends HttpServlet {
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CocktailServlet() {
+    public AddCocktailServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -30,31 +33,26 @@ public class CocktailServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // TODO Auto-generated method stub
-        HttpSession session = request.getSession(true);
-        DatabaseProcedures dP = new DatabaseProcedures();
-
-        String base = request.getParameter("Base");
-        String taste = request.getParameter("Taste");
-        String ingredients = "";
-
-        List<Cocktails> cocktail = dP.getCocktail(base, taste, ingredients);
-
-        request.setAttribute("cocktail", cocktail);
-        request.getRequestDispatcher("cocktail_page.jsp").forward(request, response);
     }
 
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(true);
-        DatabaseProcedures dP = new DatabaseProcedures();
-
+        String base = request.getParameter("Base");
+        String taste = request.getParameter("Taste");
         String name = request.getParameter("Name");
+        String link = request.getParameter("Link");
+        Part filePart = request.getPart("Image");
+        InputStream fileContent = filePart.getInputStream();
+        byte[] imageBytes = IOUtils.toByteArray(fileContent);
 
-        Cocktails cocktail = dP.getCocktailN(name);
+        Cocktails cocktail = new Cocktails(name, base, taste, "", link, null);
 
-        request.setAttribute("cocktail", cocktail);
-        request.getRequestDispatcher("cocktail_page.jsp").forward(request, response);
+        DatabaseProcedures dP = new DatabaseProcedures();
+        String result = dP.addCocktail(cocktail, imageBytes);
+        response.setContentType("text/plain");
+        response.getWriter().print(result);
+        response.setHeader("Refresh", "3;url=adminsIndex.jsp");
     }
 }

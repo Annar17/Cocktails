@@ -16,13 +16,13 @@ import java.util.List;
 /**
  * Servlet implementation class mainpackage.CocktailServlet
  */
-@WebServlet("/DrinkServlet")
-public class DrinkServlet extends HttpServlet {
+@WebServlet("/AdminDrinkServlet")
+public class AdminDrinkServlet extends HttpServlet {
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public DrinkServlet() {
+    public AdminDrinkServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -46,7 +46,7 @@ public class DrinkServlet extends HttpServlet {
 
         request.setAttribute("cocktailsList", cocktailsList);
         request.setAttribute("Base", base);
-        request.getRequestDispatcher("drinks_page.jsp").forward(request, response);
+        request.getRequestDispatcher("admin_drinks_page.jsp").forward(request, response);
     }
 
     /**

@@ -1,11 +1,14 @@
 package mainpackage;
 
+import java.awt.image.BufferedImage;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import mainpackage.datapackage.Cocktails;
@@ -147,14 +150,13 @@ public class DatabaseProcedures { // DAO
 		return result;
 	}
 
-	public Cocktails getCocktail(String base, String taste, String ingredients) {
+	public List<Cocktails> getCocktail(String base, String taste, String ingredients) {
 
-		String name = "", link = "";
 		this.loadDriver(dbDriver);
 		Connection connection = this.getConnection();
 		PreparedStatement ps;
 		ResultSet resultSet;
-		Cocktails cocktail = new Cocktails(base, taste, ingredients);
+		List<Cocktails> cocktailsList = new ArrayList<Cocktails>();
 
 		try {
 			String query1 = "SELECT name, link FROM recipes WHERE base = ? AND taste = ?;";
@@ -165,19 +167,18 @@ public class DatabaseProcedures { // DAO
 			//ps.setString(3, ingredients);
 			resultSet = ps.executeQuery();
 
-			if (resultSet.next()) {
-				name = resultSet.getString("name");
-				cocktail.setName(name);
-				link = resultSet.getString("link");
-				cocktail.setLink(link);
+			while ( resultSet.next() ) {
+				String name = resultSet.getString("name");
+				String link = resultSet.getString("link");
+
+				Cocktails c = new Cocktails(name, base, taste, "", link, "");
+				cocktailsList.add(c);
 			}
+
 			resultSet.close();
 			ps.close();
-
-			//cocktail = Cocktails(name, base, taste, ingredients, link);
-
 			connection.close();
-			return cocktail;
+			return cocktailsList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
@@ -190,7 +191,7 @@ public class DatabaseProcedures { // DAO
 		Connection connection = this.getConnection();
 		PreparedStatement ps;
 		ResultSet resultSet;
-		Cocktails cocktail = new Cocktails(name, "", "", "", "");
+		Cocktails cocktail = new Cocktails(name, "", "", "", "", null);
 
 		try {
 			String query1 = "SELECT base, taste, link FROM recipes WHERE name = ?;";
@@ -238,8 +239,10 @@ public class DatabaseProcedures { // DAO
 				String name = resultSet.getString("name");
 				String taste = resultSet.getString("taste");
 				String link = resultSet.getString("link");
+				byte[] image = resultSet.getBytes("image");
+				String encoded = Base64.getEncoder().encodeToString(image);
 
-				Cocktails c = new Cocktails(name, base, taste, "", link);
+				Cocktails c = new Cocktails(name, base, taste, "", link, encoded);
 				cocktailsList.add(c);
 			}
 			resultSet.close();
@@ -251,4 +254,56 @@ public class DatabaseProcedures { // DAO
 			return cocktailsList;
 		}
 	}
+
+	public String addCocktail(Cocktails cocktail, byte[] imageBytes) {
+
+		this.loadDriver(dbDriver);
+		Connection connection = this.getConnection();
+		String result = "";
+		String query = "INSERT INTO recipes(name, base, taste, ingredients, link, image) VALUES (?, ?, ?, 'NO', ?, ?);";
+
+		try {
+			PreparedStatement ps= connection.prepareStatement(query);
+			ps.setString(1, cocktail.getName());
+			ps.setString(2, cocktail.getBase());
+			ps.setString(3, cocktail.getTaste());
+			ps.setString(4, cocktail.getLink());
+			ps.setBytes(5, imageBytes);
+
+			ps.executeUpdate();
+			ps.close();
+			result += "Cocktail has been added successfully!";
+			connection.close();
+		} catch (SQLException e) {
+			result += "Cocktail insertion failed! \r\nCheck the database connection or check if there is already a cocktail with the same name!";
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public String deleteCocktail(Cocktails cocktail) {
+
+		this.loadDriver(dbDriver);
+		Connection connection = this.getConnection();
+		String result = "";
+		String query = "DELETE FROM recipes WHERE name = ? AND taste = ? AND image = ?;";
+
+		try {
+			PreparedStatement ps= connection.prepareStatement(query);
+			ps.setString(1, cocktail.getName());
+			ps.setString(2, cocktail.getTaste());
+			byte[] imageBytes = (cocktail.getImage()).getBytes();
+			ps.setBytes(3, imageBytes);
+
+			ps.executeUpdate();
+			ps.close();
+			result += "Cocktail has been deleted successfully!";
+			connection.close();
+		} catch (SQLException e) {
+			result += "Cocktail delete failed! \r\nCheck the database connection or try again!";
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 }

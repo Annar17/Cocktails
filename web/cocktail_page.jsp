@@ -1,4 +1,5 @@
 <%@ page import="mainpackage.datapackage.Cocktails" %>
+<%@ page import="java.util.ArrayList" %>
 <%--
   Created by IntelliJ IDEA.
   User: Anouk
@@ -70,7 +71,8 @@
 
 </script>
 
-<%Cocktails cocktail = (Cocktails) request.getAttribute("cocktail");%>
+<% ArrayList<Cocktails> cocktailsList = (ArrayList<Cocktails>)request.getAttribute("cocktailsList");
+    int i=1;%>
 
 <!--header-->
 <div class="header">
@@ -78,7 +80,7 @@
     <a id="log" href="<%=request.getContextPath()%>/LogoutServlet" class="navbar-brand scroll-top" style="visibility: hidden; float: right; border: 2px solid darkred;">LOG OUT</a>
     <a id="google_log" href="#" onclick="signOut()" class="navbar-brand scroll-top" style="visibility: hidden; float: right; border: 2px solid darkred;">LOG OUT</a>
     <div class="container">
-        <h2 style="text-align:center; font-size: 40px; color: white; display:block;"><%=cocktail.getName()%></h2>
+        <h2 style="text-align:center; font-size: 40px; color: white; display:block;"><%=cocktailsList.get(i).getName()%></h2>
     </div>
 </div>
 
@@ -88,20 +90,21 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="heading">
-                    <h5 style="text-align:center; color:white; display:block;"><%=cocktail.getBase()%>, <%=cocktail.getTaste()%></h5>
+                    <h5 style="text-align:center; color:white; display:block;"><%=cocktailsList.get(i).getBase()%>, <%=cocktailsList.get(i).getTaste()%></h5>
                 </div>
                 <h4 style="text-align:center; color:white;">&mdash; Make it at home: &mdash;</h4>
-                <iframe src=<%=cocktail.getLink()%> height="600px" width="1100px" target="_blank"></iframe>
+                <iframe src=<%=cocktailsList.get(i).getLink()%> height="600px" width="1100px" target="_blank"></iframe>
             </div>
         </div>
+        <br> <br>
+        <div><h4 style="text-align: center; color: white;">&mdash; Or find a bar near you: &mdash;</h4></div>
+        <br>
+        <a href="maps.jsp" style="display: flex; align-items: center; justify-content: center;">
+            <button style="position: absolute; align-self: center; text-align: center;">CLICK HERE</button>
+        </a>
+        <br>
     </div>
 
-    <div><h4 style="text-align: center; color: white;">&mdash; Or find a bar near you: &mdash;</h4></div>
-    <br>
-    <a href="Maps.jsp" style="display: flex; align-items: center; justify-content: center;">
-        <button style="position: absolute; align-self: center; text-align: center;">CLICK HERE</button>
-    </a>
-    <br>
 </section>
 
 <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>

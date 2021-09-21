@@ -1,28 +1,29 @@
 package mainpackage;
 
 import mainpackage.datapackage.Cocktails;
+import org.apache.commons.io.IOUtils;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.io.InputStream;
 
 /**
  * Servlet implementation class mainpackage.CocktailServlet
  */
-@WebServlet("/DrinkServlet")
-public class DrinkServlet extends HttpServlet {
+@MultipartConfig
+@WebServlet("/DeleteCocktailServlet")
+public class DeleteCocktailServlet extends HttpServlet {
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public DrinkServlet() {
+    public DeleteCocktailServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,21 +33,17 @@ public class DrinkServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // TODO Auto-generated method stub
-        HttpSession session = request.getSession(true);
+        //String taste = request.getParameter("Taste");
+        String name = request.getParameter("DrinkName");
+        //String image = request.getParameter("Image");
+
+        Cocktails cocktail = new Cocktails(name, "", "", "", "", "");
+
         DatabaseProcedures dP = new DatabaseProcedures();
-
-        String base = request.getParameter("Base");
-        List<Cocktails> cocktailsList = dP.getCocktails(base);
-        Collections.sort(cocktailsList, new Comparator<Cocktails>() {
-            @Override
-            public int compare(Cocktails o1, Cocktails o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-        });
-
-        request.setAttribute("cocktailsList", cocktailsList);
-        request.setAttribute("Base", base);
-        request.getRequestDispatcher("drinks_page.jsp").forward(request, response);
+        String result = dP.deleteCocktail(cocktail);
+        response.setContentType("text/plain");
+        response.getWriter().print(result);
+        response.setHeader("Refresh", "3;url=admin_drink_page.jsp");
     }
 
     /**
