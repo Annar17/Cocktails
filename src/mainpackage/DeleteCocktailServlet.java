@@ -12,12 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * Servlet implementation class mainpackage.CocktailServlet
  */
 @MultipartConfig
 @WebServlet("/DeleteCocktailServlet")
+/* RUNS WHEN ADMIN CLICKS DELETE BUTTON FROM "admin_drinks_page.jsp" */
 public class DeleteCocktailServlet extends HttpServlet {
 
     /**
@@ -33,23 +35,19 @@ public class DeleteCocktailServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // TODO Auto-generated method stub
-        //String taste = request.getParameter("Taste");
-        String name = request.getParameter("DrinkName");
-        //String image = request.getParameter("Image");
-
-        Cocktails cocktail = new Cocktails(name, "", "", "", "", "");
-
-        DatabaseProcedures dP = new DatabaseProcedures();
-        String result = dP.deleteCocktail(cocktail);
-        response.setContentType("text/plain");
-        response.getWriter().print(result);
-        response.setHeader("Refresh", "3;url=admin_drink_page.jsp");
     }
 
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String name = request.getParameter("cocktailName");
 
+        DatabaseProcedures dP = new DatabaseProcedures();
+        String result = dP.deleteCocktail(name);
+
+        response.setContentType("text/plain");
+        response.getWriter().print(result);
+        response.setHeader("Refresh", "3;url=adminsIndex.jsp");
     }
 }

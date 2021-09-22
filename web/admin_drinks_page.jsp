@@ -7,6 +7,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!-- ADMIN'S PAGE WHEN CHOOSING A DRINK CATEGORY -->
 <html>
 <head>
     <meta charset="utf-8">
@@ -157,11 +158,6 @@
         }
     }
 
-    function callServlet() {
-        document.forms[0].action = "DeleteCocktailServlet";
-        document.forms[0].submit();
-    }
-
 </script>
 
 <!--header-->
@@ -191,9 +187,8 @@
             <%-- Dynamic creation of squares --%>
             <div class="col-md-4">
                 <div class="food-item">
-                    <a name="Name" value="Name" href="<%=request.getContextPath()%>/CocktailServlet2?Name=<%=cocktailsList.get(i).getName()%>" method="get" style="font-size: 20px; color: white;"><%=cocktailsList.get(i).getName()%></a>
-                    <input type="hidden" name="DrinkName" value="<%= cocktailsList.get(i).getName() %>" />
-                    <button class="btn" onclick="document.getElementById('id01').style.display='block'"><i class="fa fa-close"></i></button>
+                    <a name="Name" id="Name" value="Name" href="<%=request.getContextPath()%>/CocktailServlet2?Name=<%=cocktailsList.get(i).getName()%>" method="get" style="font-size: 20px; color: white;"><%=cocktailsList.get(i).getName()%></a>
+                    <button class="btn" id="<%=cocktailsList.get(i).getName()%>" onclick="document.getElementById('id01').style.display='block'"><i class="fa fa-close"></i></button>
                     <div name="Taste" value="Taste"><%=cocktailsList.get(i).getTaste()%></div>
                     <a href="<%=request.getContextPath()%>/CocktailServlet2?Name=<%=cocktailsList.get(i).getName()%>" method="get" style="font-size: 20px; color: white;">
                         <img type="file" name="Image" value="Image" src="data:image/png;base64, <%=cocktailsList.get(i).getImage()%>" alt="" width="300" height="250">
@@ -205,23 +200,23 @@
                     </div>
                 </div>
             </div>
+            <div id="id01" class="modal">
+                <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+                <form action="${pageContext.request.contextPath}/DeleteCocktailServlet?cocktailName=<%=cocktailsList.get(i).getName()%>" name="delete_form" class="modal-content" method="post" enctype="multipart/form-data">
+                    <div class="container">
+                        <h1>DELETE: <%=cocktailsList.get(i).getName()%></h1>
+                        <p>Are you sure you want to delete this cocktail?</p>
+
+                        <div class="clearfix">
+                            <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+                            <input type="submit" value="Delete" class="deletebtn">
+                        </div>
+                    </div>
+                </form>
+            </div>
             <% } %>
         </div>
 
-        <div id="id01" class="modal">
-            <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-            <form name="delete_form" class="modal-content" method="get" enctype="multipart/form-data">
-                <div class="container">
-                    <h1>Delete Account</h1>
-                    <p>Are you sure you want to delete this cocktail?</p>
-
-                    <div class="clearfix">
-                        <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-                        <button type="button" onclick="callServlet();" class="deletebtn">Delete</button>
-                    </div>
-                </div>
-            </form>
-        </div>
     </div>
 </section>
 

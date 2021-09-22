@@ -18,6 +18,7 @@ import java.io.InputStream;
  */
 @MultipartConfig
 @WebServlet("/AddCocktailServlet")
+/* RUNS WHEN ADD COCKTAIL FORM FROM ADMIN'S INDEX IS SUBMITTED */
 public class AddCocktailServlet extends HttpServlet {
 
     /**

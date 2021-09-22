@@ -17,6 +17,7 @@ import java.util.List;
  * Servlet implementation class mainpackage.CocktailServlet
  */
 @WebServlet("/DrinkServlet")
+/* RUNS WHEN USER CHOOSES A DRINK CATEGORY */
 public class DrinkServlet extends HttpServlet {
 
     /**

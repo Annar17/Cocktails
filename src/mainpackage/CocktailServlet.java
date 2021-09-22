@@ -15,6 +15,7 @@ import java.util.List;
  * Servlet implementation class mainpackage.CocktailServlet
  */
 @WebServlet("/CocktailServlet")
+/* RUNS WHEN COCKTAIL PICKER FORM FROM MAIN INDEX IS SUBMITTED */
 public class CocktailServlet extends HttpServlet {
 
     /**
@@ -37,9 +38,9 @@ public class CocktailServlet extends HttpServlet {
         String taste = request.getParameter("Taste");
         String ingredients = "";
 
-        List<Cocktails> cocktail = dP.getCocktail(base, taste, ingredients);
+        Cocktails cocktailsList = dP.getCocktail(base, taste, ingredients);
 
-        request.setAttribute("cocktail", cocktail);
+        request.setAttribute("cocktailsList", cocktailsList);
         request.getRequestDispatcher("cocktail_page.jsp").forward(request, response);
     }
 

@@ -150,13 +150,14 @@ public class DatabaseProcedures { // DAO
 		return result;
 	}
 
-	public List<Cocktails> getCocktail(String base, String taste, String ingredients) {
+	public Cocktails getCocktail(String base, String taste, String ingredients) {
 
+		String name = "", link = "";
 		this.loadDriver(dbDriver);
 		Connection connection = this.getConnection();
 		PreparedStatement ps;
 		ResultSet resultSet;
-		List<Cocktails> cocktailsList = new ArrayList<Cocktails>();
+		Cocktails cocktail = new Cocktails(base, taste, ingredients);
 
 		try {
 			String query1 = "SELECT name, link FROM recipes WHERE base = ? AND taste = ?;";
@@ -167,18 +168,17 @@ public class DatabaseProcedures { // DAO
 			//ps.setString(3, ingredients);
 			resultSet = ps.executeQuery();
 
-			while ( resultSet.next() ) {
-				String name = resultSet.getString("name");
-				String link = resultSet.getString("link");
-
-				Cocktails c = new Cocktails(name, base, taste, "", link, "");
-				cocktailsList.add(c);
+			if ( resultSet.next() ) {
+				name = resultSet.getString("name");
+				cocktail.setName(name);
+				link = resultSet.getString("link");
+				cocktail.setLink(link);
 			}
 
 			resultSet.close();
 			ps.close();
 			connection.close();
-			return cocktailsList;
+			return cocktail;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
@@ -281,19 +281,16 @@ public class DatabaseProcedures { // DAO
 		return result;
 	}
 
-	public String deleteCocktail(Cocktails cocktail) {
+	public String deleteCocktail(String name) {
 
 		this.loadDriver(dbDriver);
 		Connection connection = this.getConnection();
 		String result = "";
-		String query = "DELETE FROM recipes WHERE name = ? AND taste = ? AND image = ?;";
+		String query = "DELETE FROM recipes WHERE name = ?";
 
 		try {
 			PreparedStatement ps= connection.prepareStatement(query);
-			ps.setString(1, cocktail.getName());
-			ps.setString(2, cocktail.getTaste());
-			byte[] imageBytes = (cocktail.getImage()).getBytes();
-			ps.setBytes(3, imageBytes);
+			ps.setString(1, name);
 
 			ps.executeUpdate();
 			ps.close();

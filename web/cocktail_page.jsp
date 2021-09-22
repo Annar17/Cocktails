@@ -8,6 +8,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!-- SHOWS CHOSEN COCKTAIL -->
 <html>
 <head>
     <meta charset="utf-8">
@@ -71,8 +72,7 @@
 
 </script>
 
-<% ArrayList<Cocktails> cocktailsList = (ArrayList<Cocktails>)request.getAttribute("cocktailsList");
-    int i=1;%>
+<% Cocktails cocktailsList = (Cocktails) request.getAttribute("cocktailsList");%>
 
 <!--header-->
 <div class="header">
@@ -80,7 +80,7 @@
     <a id="log" href="<%=request.getContextPath()%>/LogoutServlet" class="navbar-brand scroll-top" style="visibility: hidden; float: right; border: 2px solid darkred;">LOG OUT</a>
     <a id="google_log" href="#" onclick="signOut()" class="navbar-brand scroll-top" style="visibility: hidden; float: right; border: 2px solid darkred;">LOG OUT</a>
     <div class="container">
-        <h2 style="text-align:center; font-size: 40px; color: white; display:block;"><%=cocktailsList.get(i).getName()%></h2>
+        <h2 style="text-align:center; font-size: 40px; color: white; display:block;"><%=cocktailsList.getName()%></h2>
     </div>
 </div>
 
@@ -90,10 +90,10 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="heading">
-                    <h5 style="text-align:center; color:white; display:block;"><%=cocktailsList.get(i).getBase()%>, <%=cocktailsList.get(i).getTaste()%></h5>
+                    <h5 style="text-align:center; color:white; display:block;"><%=cocktailsList.getBase()%>, <%=cocktailsList.getTaste()%></h5>
                 </div>
                 <h4 style="text-align:center; color:white;">&mdash; Make it at home: &mdash;</h4>
-                <iframe src=<%=cocktailsList.get(i).getLink()%> height="600px" width="1100px" target="_blank"></iframe>
+                <iframe src=<%=cocktailsList.getLink()%> height="600px" width="1100px" target="_blank"></iframe>
             </div>
         </div>
         <br> <br>
@@ -104,6 +104,7 @@
         </a>
         <br>
     </div>
+    <br>
 
 </section>
 

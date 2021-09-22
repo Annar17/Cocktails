@@ -14,6 +14,7 @@ import java.io.IOException;
  * Servlet implementation class mainpackage.CocktailServlet
  */
 @WebServlet("/CocktailServlet2")
+/* RUNS WHEN ADMIN CHOOSES A COCKTAIL FROM "admin_drinks_page.jsp" */
 public class CocktailServlet2 extends HttpServlet {
 
     /**
@@ -34,9 +35,9 @@ public class CocktailServlet2 extends HttpServlet {
 
         String name = request.getParameter("Name");
 
-        Cocktails cocktail = dP.getCocktailN(name);
+        Cocktails cocktailsList = dP.getCocktailN(name);
 
-        request.setAttribute("cocktail", cocktail);
+        request.setAttribute("cocktailsList", cocktailsList);
         request.getRequestDispatcher("cocktail_page.jsp").forward(request, response);
     }
 

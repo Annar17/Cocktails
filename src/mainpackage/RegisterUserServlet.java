@@ -85,7 +85,7 @@ public class RegisterUserServlet extends HttpServlet {
 			response.getWriter().print(result);
 			response.setHeader("Refresh", "3;url=mainIndex.jsp");
 		} else {
-			response.getWriter().print("Login Failed! You must be over 18 years old! :'( ");
+			response.getWriter().print("Registration failed! You must be over 18 years old! :'( ");
 			response.setHeader("Refresh", "3;url=register.jsp");
 		}
 	}
